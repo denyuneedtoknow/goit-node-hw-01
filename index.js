@@ -43,7 +43,9 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
             break;
 
         case 'remove':
-            // ... id
+            const newContacts = await removeContact(id)
+            console.log(chalk.yellow(` deleted`))
+            console.table(newContacts);
             break;
 
         default:

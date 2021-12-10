@@ -1,4 +1,4 @@
-// contacts.js
+
 const fs = require('fs/promises')
 const path = require('path')
 const crypto = require('crypto')
@@ -11,10 +11,10 @@ const readContent = async () => {
     const result = JSON.parse(content)
     return result
 }
-// TODO: задокументировать каждую функцию
+
 const listContacts = async () => {
     return await readContent()
-    // ...твой код
+
 }
 
 const getContactById = async (contactId) => {
@@ -23,8 +23,11 @@ const getContactById = async (contactId) => {
     return result
 }
 
-function removeContact(contactId) {
-    // ...твой код
+const removeContact = async (contactId) => {
+    const contacts = await readContent()
+    const newContacts = contacts.filter(contact => contact.id !== contactId)
+    await fs.writeFile(contactsPath, JSON.stringify(newContacts));
+    return newContacts
 }
 
 const addContact = async (name, email, phone) => {
