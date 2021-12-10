@@ -1,5 +1,10 @@
-
+const chalk = require('chalk')
 const { Command } = require('commander');
+
+const { listContacts, getContactById, removeContact, addContact } = require("./contacts")
+
+
+
 const program = new Command();
 program
     .requiredOption('-a, --action <type>', 'choose action')
@@ -12,19 +17,29 @@ program.parse(process.argv);
 
 const argv = program.opts();
 
-// TODO: рефакторить
+
 const invokeAction = async ({ action, id, name, email, phone }) => {
+
     switch (action) {
         case 'list':
-            // ...
+            const contacts = await listContacts()
+            console.table(contacts);
             break;
 
         case 'get':
-            // ... id
+            const contactById = await getContactById(id)
+            if (contactById) {
+
+                console.log(chalk.green(`contact ${contactById.name} found`));
+                return
+            }
+            console.log(chalk.red('contact not found'))
             break;
 
         case 'add':
-            // ... name email phone
+            const contact = await addContact(name, email, phone)
+            console.log(chalk.green('contact added'));
+            console.log(contact);
             break;
 
         case 'remove':
@@ -32,8 +47,8 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
             break;
 
         default:
-            console.warn(('Unknown action type!'));
+            console.warn(chalk.red('Unknown action type!'));
     }
 }
 
-invokeAction(argv).then(() => console.log('operation success'));;
+invokeAction(argv).then(() => console.log('operation success'));
